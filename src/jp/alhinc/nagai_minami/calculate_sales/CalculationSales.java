@@ -42,7 +42,7 @@ public class CalculationSales {
 					return;
 				}
 				branchNames.put(items[0],items[1]);
-				branchSales.put(items[0],0L);		
+				branchSales.put(items[0],0L);
 			}
 		}catch(IOException e){
 			System.out.println("支店定義ファイルが存在しません");
@@ -69,13 +69,13 @@ public class CalculationSales {
 			while((products = commodityBr.readLine()) != null) {
 				String str = (products);
 				String[] items = str.split(",");
-				
+
 				if(items.length !=2 || !items[0].matches("^\\w{8}$")){
 						System.out.println("商品定義ファイルのフォーマットが不正です");
 						return;
 					}
 				commodityNames.put(items[0], items[1]);
-				commoditySales.put(items[0],0L);	
+				commoditySales.put(items[0],0L);
 			}
 		}catch(IOException e){
 			System.out.println("商品定義ファイルが存在しません");
@@ -87,7 +87,7 @@ public class CalculationSales {
                 } catch (IOException e) {
                     System.out.println("予期せぬエラーが発生しました");
                 }
-		 }	
+		 }
 
 ///////////売上ファイルの連番チェックと売上ファイル名のリスト化
 		File check = new File(args[0]);
@@ -100,7 +100,7 @@ public class CalculationSales {
 	    		Collections.sort(sales);
 	    		}
 		}
-		
+
 		for(int n = 0; n < sales.size(); n++){
 			String str = sales.get(n);
 			String[] salesList = str.split(".rcd");
@@ -111,7 +111,7 @@ public class CalculationSales {
 		}
 
 ///////////売り上げファイルの読み込み
-		
+
 		BufferedReader salesBr = null;
 		try{
 			for(int n = 0; n < sales.size(); n++){
@@ -212,8 +212,7 @@ public class CalculationSales {
 	                } catch (IOException e) {
 	                    System.out.println("予期せぬエラーが発生しました");
 	                }
-			  
-		} 
+		}
 
 ///////////支店別集計ファイル(commodity.out)へ出力
 		BufferedWriter commodityOutBw = null;
@@ -234,9 +233,9 @@ public class CalculationSales {
 	                	commodityOutBw.close( );
 	                } catch (IOException e) {
 	                    System.out.println("予期せぬエラーが発生しました");
-	                }		  
-		} 
-		
+	                }
+		}
+
 	}
 }
 
