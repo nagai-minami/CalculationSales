@@ -23,10 +23,9 @@ public class CalculationSales {
 			return;
 		}
 
-///////////支店定義ファイルを読み込む
+///////////支店定義ファイルの読み込み
 		Map<String,String> branchNames = new HashMap<String,String>();
 		Map<String,Long> branchSales = new HashMap<String,Long>();
-
 
 		try{
 			File file = new File(args[0]+ File.separator + "branch.lst");
@@ -51,7 +50,7 @@ public class CalculationSales {
 			return;
 		}
 
-///////////商品定義ファイルを読み込む
+///////////商品定義ファイルの読み込み
 		Map<String,String> commodityNames = new HashMap<String,String>();//商品定義ファイルのマップ
 		Map<String,Long> commoditySales = new HashMap<String,Long>();
 
@@ -79,7 +78,7 @@ public class CalculationSales {
 			return;
 		}
 
-///////////売上ファイルの連番チェックとファイル名のリスト化
+///////////売上ファイルの連番チェックと売上ファイル名のリスト化
 		File check = new File(args[0]);
 		String[] fileList = check.list();
 		ArrayList<String> sales = new ArrayList<String>();
