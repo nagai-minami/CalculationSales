@@ -17,7 +17,6 @@ public class CalculationSales {
 
 	public static void main(String[] args){
 
-
 ///////////コマンドライン引数のエラー処理
 		if (args.length != 1 ) {
 			System.out.println("予期せぬエラーが発生しました");
@@ -95,7 +94,6 @@ public class CalculationSales {
 					return;
 	    		}
 			}
-
 		for(int n = 0; n < sales.size(); n++){
 			String str = sales.get(n);
 			String[] salesList = str.split(".rcd");
@@ -106,8 +104,6 @@ public class CalculationSales {
 		}
 
 ///////////売り上げファイルの読み込み
-
-
 		try{
 			for(int n = 0; n < sales.size(); n++){
 				File file = new File(args[0]+ File.separator + sales.get(n));
@@ -118,12 +114,22 @@ public class CalculationSales {
 				while((uriage = br.readLine()) != null){
 					summaryList.add(uriage);
 				}
+				if(summaryList.size() != 3){
+					System.out.println(sales +"のフォーマットが不正です");
+					return;
+				}
+
 ////////※saleは売上金額※
 				Long sale = Long.parseLong(summaryList.get(2));
 
 ///////////支店別集計合計金額：branchSalesへ集計
 				String branchKey = summaryList.get(0);
-				Long branchSalesValue = branchSales.get(branchKey);
+				Long branchSalesValue;
+				if(branchSales.get(branchKey)==null){
+					System.out.println(sales + "の支店コードが不正です");
+					return;
+				}
+				branchSalesValue = branchSales.get(branchKey);
 				Long branchSum = branchSalesValue + sale;
 				branchSales.put(branchKey,branchSum);
 
@@ -134,10 +140,14 @@ public class CalculationSales {
 
 ///////////商品別集計合計金額：commoditySalesへ集計
 				String commodityKey = summaryList.get(1);
-				Long commodityValues = commoditySales.get(commodityKey);
+				Long commodityValues;
+				if(commoditySales.get(commodityKey)==null){
+					System.out.println(sales + "の商品コードが不正です");
+					return;
+				}
+				commodityValues =commoditySales.get(commodityKey);
 				Long commoditySum = commodityValues + sale;
 				commoditySales.put(commodityKey,commoditySum);
-
 				if(commoditySum > 1000000000){
 					System.out.println("合計金額が10桁を超えました");
 					return;
@@ -145,11 +155,9 @@ public class CalculationSales {
 			br.close();
 			}
 		}catch(IOException e){
-			System.out.println("エラーメッセージ「<該当ファイル名>のフォーマットが不正です");
+			System.out.println("売上ファイル名が連番になっていません");
 			return;
 		}
-
-
 
 /////////// branchSales List(ソート)
 		List<Map.Entry<String,Long>> branchSaleEntries = new ArrayList<Map.Entry<String,Long>>(branchSales.entrySet());
@@ -181,7 +189,6 @@ public class CalculationSales {
 			  System.out.println("予期せぬエラーが発生しました")	;
 			  return;
 			}
-
 
 ///////////支店別集計ファイル(commodity.out)へ出力
 		try{
