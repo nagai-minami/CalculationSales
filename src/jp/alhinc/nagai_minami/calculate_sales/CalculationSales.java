@@ -23,21 +23,21 @@ public class CalculationSales {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		}
-	
+
 ///////////支店定義ファイルの読み込み
 		Map<String,String> branchNames = new HashMap<String,String>();
 		Map<String,Long> branchSales = new HashMap<String,Long>();
-	
-	
+
+
 		if(!fileRead(args[0],"branch.lst","支店定義ファイル","^[0-9]{3}$",branchNames, branchSales)){
 			return;
 		}
-		
+
 ///////////商品定義ファイルの読み込み
-		
+
 		Map<String,String> commodityNames = new HashMap<String,String>();
 		Map<String,Long> commoditySales = new HashMap<String,Long>();
-		
+
 		if(!fileRead(args[0],"commodity.lst","商品定義ファイル", "^\\w{8}$", commodityNames, commoditySales)){
 			return;
 		}
@@ -137,7 +137,6 @@ public class CalculationSales {
 		 }
 
 ///////////支店別集計ファイル(branch.out)へ出力
-		
 		if(!fileWrite(branchSales, args[0],"branch.out", branchNames)){
 			return;
 		}
@@ -147,6 +146,7 @@ public class CalculationSales {
 		    return;
 	   }
 	}
+
 //////////fileReadメソッド：ファイルから入力
 	private static boolean fileRead(String path,String fileName, String fileError, String match, Map mapNames, Map mapSales){
 
@@ -168,7 +168,7 @@ public class CalculationSales {
 				}
 			mapNames.put(items[0],items[1]);
 			mapSales.put(items[0],0L);
-				
+
 			}
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");
@@ -185,8 +185,8 @@ public class CalculationSales {
 		 }
 		return true;
 	}
-	
-	
+
+
 //////////fileWriteメソッド：ファイルへ出力
 	private static boolean fileWrite(Map mapSales, String path, String fileOut,Map mapNames){
 		List<Map.Entry<String,Long>> entries = new ArrayList<Map.Entry<String,Long>>(mapSales.entrySet());
@@ -196,14 +196,12 @@ public class CalculationSales {
 			return (o2.getValue()).compareTo(o1.getValue());
 			}
 		});
-
 		BufferedWriter bw = null;
-	
 		try{
 			File newfile = new File(path + File.separator + fileOut);
 			FileWriter filewriter = new FileWriter(newfile);
 			bw = new BufferedWriter(filewriter);
-			
+
 			for (Entry<String,Long> s : entries) {
 				 bw.write(s.getKey() + "," +  mapNames.get(s.getKey()) + "," +  s.getValue());
 				 bw.newLine();
