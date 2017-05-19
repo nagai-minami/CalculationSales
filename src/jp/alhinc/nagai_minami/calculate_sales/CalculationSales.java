@@ -154,7 +154,7 @@ public class CalculationSales {
 		try{
 			File file = new File(path + File.separator + fileName);
 			if(!file.isFile()){
-				System.out.println("予期せぬエラーが発生しました");
+				System.out.println(fileError +"が存在しません");
 			}
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);
@@ -171,7 +171,7 @@ public class CalculationSales {
 				
 			}
 		}catch(IOException e){
-			System.out.println(fileError +"が存在しません");
+			System.out.println("予期せぬエラーが発生しました");
 			return false;
 		}finally{
 			if (br != null){
@@ -207,7 +207,6 @@ public class CalculationSales {
 			for (Entry<String,Long> s : entries) {
 				 bw.write(s.getKey() + "," +  mapNames.get(s.getKey()) + "," +  s.getValue());
 				 bw.newLine();
-				
 			}
 		}catch(IOException e){
 			 System.out.println("予期せぬエラーが発生しました")	;
