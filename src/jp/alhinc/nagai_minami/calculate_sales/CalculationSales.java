@@ -25,19 +25,16 @@ public class CalculationSales {
 		}
 
 ///////////支店定義ファイルの読み込み
-		Map<String,String> branchNames = new HashMap<String,String>();
-		Map<String,Long> branchSales = new HashMap<String,Long>();
-
-
+		Map<String, String> branchNames = new HashMap<String, String>();
+		Map<String, Long> branchSales = new HashMap<String, Long>();
 		if(!fileRead(args[0],"branch.lst","支店定義ファイル","^[0-9]{3}$",branchNames, branchSales)){
 			return;
 		}
 
 ///////////商品定義ファイルの読み込み
 
-		Map<String,String> commodityNames = new HashMap<String,String>();
-		Map<String,Long> commoditySales = new HashMap<String,Long>();
-
+		Map<String, String> commodityNames = new HashMap<String, String>();
+		Map<String, Long> commoditySales = new HashMap<String, Long>();
 		if(!fileRead(args[0],"commodity.lst","商品定義ファイル", "^\\w{8}$", commodityNames, commoditySales)){
 			return;
 		}
@@ -46,7 +43,6 @@ public class CalculationSales {
 		File check = new File(args[0]);
 		String[] fileList = check.list();
 		ArrayList<String> sales = new ArrayList<String>();
-
 		for(int i = 0; i < fileList.length; i++){
 			File fileName = new File(args[0], fileList[i]);
 			if(fileList[i].matches("^\\d{8}\\.rcd$") && fileName.isFile()){
@@ -54,10 +50,10 @@ public class CalculationSales {
 			}
 		}
 		Collections.sort(sales);
-		for(int n = 0; n < sales.size(); n++){
-			String str = sales.get(n);
+		for(int i = 0; i < sales.size(); i++){
+			String str = sales.get(i);
 			String[] salesList = str.split(".rcd");
-			if(Integer.parseInt(salesList[0])!= n+1){
+			if(Integer.parseInt(salesList[0])!= i+1){
 				System.out.println("売上ファイル名が連番になっていません");
 				return;
 			}
@@ -66,20 +62,18 @@ public class CalculationSales {
 ///////////売り上げファイルの読み込み
 		BufferedReader br = null;
 		try{
-			for(int n = 0; n < sales.size(); n++){
-				File file = new File(args[0]+ File.separator + sales.get(n));
-				FileReader fr = new FileReader(file);
-				br = new BufferedReader(fr);
+			for(int i = 0; i < sales.size(); i++){
+				File file = new File(args[0] + File.separator + sales.get(i));
+				br = new BufferedReader(new FileReader(file));
 				ArrayList<String> summaryList = new ArrayList<String>();
 				String uriage;
 				while((uriage = br.readLine()) != null){
 					summaryList.add(uriage);
 				}
 				if(summaryList.size() != 3){
-					System.out.println(sales.get(n) +"のフォーマットが不正です");
+					System.out.println(sales.get(i) +"のフォーマットが不正です");
 					return;
 				}
-
 				if(!summaryList.get(2).matches("^[0-9]*$")){
 					System.out.println("予期せぬエラーが発生しました");
 					return;
@@ -92,13 +86,11 @@ public class CalculationSales {
 				String branchKey = summaryList.get(0);
 				Long branchSalesValue;
 				if(!branchSales.containsKey(branchKey)){
-					System.out.println(sales.get(n) + "の支店コードが不正です");
+					System.out.println(sales.get(i) + "の支店コードが不正です");
 					return;
 				}
 				branchSalesValue = branchSales.get(branchKey);
 				Long branchSum = branchSalesValue + sale;
-
-
 				if(branchSum >= 10000000000L){
 					System.out.println("合計金額が10桁を超えました");
 					return;
@@ -108,17 +100,15 @@ public class CalculationSales {
 				String commodityKey = summaryList.get(1);
 				Long commodityValues;
 				if(!commoditySales.containsKey(commodityKey)){
-					System.out.println(sales.get(n) + "の商品コードが不正です");
+					System.out.println(sales.get(i) + "の商品コードが不正です");
 					return;
 				}
 				commodityValues =commoditySales.get(commodityKey);
 				Long commoditySum = commodityValues + sale;
-
 				if(commoditySum >= 10000000000L){
 					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
-
 				branchSales.put(branchKey,branchSum);
 				commoditySales.put(commodityKey,commoditySum);
 			}
@@ -127,34 +117,35 @@ public class CalculationSales {
 			return;
 		}finally{
 			if (br != null){
-                try {
-                	br.close();
-                } catch (IOException e) {
-                    System.out.println("予期せぬエラーが発生しました");
-                    return;
-                }
+				try {
+					br.close();
+				} catch (IOException e) {
+					System.out.println("予期せぬエラーが発生しました");
+					return;
+				}
 			}
 		 }
 
 ///////////支店別集計ファイル(branch.out)へ出力
-		if(!fileWrite(branchSales, args[0],"branch.out", branchNames)){
+		if(!fileWrite(branchSales, args[0], "branch.out", branchNames)){
 			return;
 		}
 
 ///////////支店別集計ファイル(commodity.out)へ出力
 		if(!fileWrite(commoditySales, args[0], "commodity.out", commodityNames)){
-		    return;
-	   }
+			return;
+		}
 	}
 
 //////////fileReadメソッド：ファイルから入力
-	private static boolean fileRead(String path,String fileName, String fileError, String match, Map mapNames, Map mapSales){
+	private static boolean fileRead(String path, String fileName, String fileError, String match, Map<String, String> mapNames, Map<String, Long> mapSales){
 
 		BufferedReader br = null;
 		try{
 			File file = new File(path + File.separator + fileName);
 			if(!file.isFile()){
 				System.out.println(fileError +"が存在しません");
+				return false;
 			}
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);
@@ -166,31 +157,29 @@ public class CalculationSales {
 					System.out.println(fileError + "のフォーマットが不正です");
 					return false;
 				}
-			mapNames.put(items[0],items[1]);
-			mapSales.put(items[0],0L);
-
+				mapNames.put(items[0],items[1]);
+				mapSales.put(items[0],0L);
 			}
 		}catch(IOException e){
 			System.out.println("予期せぬエラーが発生しました");
 			return false;
 		}finally{
 			if (br != null){
-	            try {
-	                br.close();
-	            } catch (IOException e) {
-	                System.out.println("予期せぬエラーが発生しました");
-	                return false;
-	            }
-			  }
+				try {
+					br.close();
+					} catch (IOException e) {
+						System.out.println("予期せぬエラーが発生しました");
+						return false;
+						}
+				}
 		 }
 		return true;
 	}
 
-
 //////////fileWriteメソッド：ファイルへ出力
-	private static boolean fileWrite(Map mapSales, String path, String fileOut,Map mapNames){
-		List<Map.Entry<String,Long>> entries = new ArrayList<Map.Entry<String,Long>>(mapSales.entrySet());
-		Collections.sort(entries, new Comparator<Map.Entry<String,Long>>() {
+	private static boolean fileWrite(Map<String, Long> mapSales, String path, String fileOut,Map<String, String> mapNames){
+		List<Map.Entry<String, Long>> entries = new ArrayList<Map.Entry<String, Long>>(mapSales.entrySet());
+		Collections.sort(entries, new Comparator<Map.Entry<String, Long>>() {
 			@Override
 			public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
 			return (o2.getValue()).compareTo(o1.getValue());
@@ -201,7 +190,6 @@ public class CalculationSales {
 			File newfile = new File(path + File.separator + fileOut);
 			FileWriter filewriter = new FileWriter(newfile);
 			bw = new BufferedWriter(filewriter);
-
 			for (Entry<String,Long> s : entries) {
 				 bw.write(s.getKey() + "," +  mapNames.get(s.getKey()) + "," +  s.getValue());
 				 bw.newLine();
@@ -210,14 +198,14 @@ public class CalculationSales {
 			 System.out.println("予期せぬエラーが発生しました")	;
 			  return false;
 		}finally{
-			  if (bw != null){
-	                try {
-	                	bw.close( );
-	                } catch (IOException e) {
-	                    System.out.println("予期せぬエラーが発生しました");
-	                    return false;
-	                }
-			  }
+			if (bw != null){
+				try {
+					bw.close( );
+				}catch (IOException e) {
+					System.out.println("予期せぬエラーが発生しました");
+					return false;
+					}
+				}
 		}
 		return true;
 	}
