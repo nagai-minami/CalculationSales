@@ -138,12 +138,12 @@ public class CalculationSales {
 
 ///////////支店別集計ファイル(branch.out)へ出力
 		
-		if(!fileWrite(branchSales,args[0],"branch.out")){
+		if(!fileWrite(branchSales, args[0],"branch.out", branchNames)){
 			return;
 		}
 
 ///////////支店別集計ファイル(commodity.out)へ出力
-		if(!fileWrite(commoditySales,args[0],"commodity.out")){
+		if(!fileWrite(commoditySales, args[0], "commodity.out", commodityNames)){
 		    return;
 	   }
 	}
@@ -153,6 +153,9 @@ public class CalculationSales {
 		BufferedReader br = null;
 		try{
 			File file = new File(path + File.separator + fileName);
+			if(!file.isFile()){
+				System.out.println("予期せぬエラーが発生しました");
+			}
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);
 			String list;
@@ -183,9 +186,10 @@ public class CalculationSales {
 		return true;
 	}
 	
+	
 //////////fileWriteメソッド：ファイルへ出力
-	private static boolean fileWrite(Map sales, String path, String fileOut){
-		List<Map.Entry<String,Long>> entries = new ArrayList<Map.Entry<String,Long>>(sales.entrySet());
+	private static boolean fileWrite(Map mapSales, String path, String fileOut,Map mapNames){
+		List<Map.Entry<String,Long>> entries = new ArrayList<Map.Entry<String,Long>>(mapSales.entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<String,Long>>() {
 			@Override
 			public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
@@ -194,13 +198,16 @@ public class CalculationSales {
 		});
 
 		BufferedWriter bw = null;
+	
 		try{
 			File newfile = new File(path + File.separator + fileOut);
 			FileWriter filewriter = new FileWriter(newfile);
 			bw = new BufferedWriter(filewriter);
+			
 			for (Entry<String,Long> s : entries) {
-				 bw.write(s.getKey() + "," +  sales.get(s.getKey()) + "," +  s.getValue());
+				 bw.write(s.getKey() + "," +  mapNames.get(s.getKey()) + "," +  s.getValue());
 				 bw.newLine();
+				
 			}
 		}catch(IOException e){
 			 System.out.println("予期せぬエラーが発生しました")	;
