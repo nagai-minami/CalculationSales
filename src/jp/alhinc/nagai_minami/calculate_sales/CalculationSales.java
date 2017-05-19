@@ -128,8 +128,12 @@ public class CalculationSales {
 					summaryList.add(uriage);
 				}
 				if(summaryList.size() != 3){
-					System.out.println(sales +"のフォーマットが不正です");
+					System.out.println(sales.get(n) +"のフォーマットが不正です");
 					return;
+				}
+
+				if(!summaryList.get(2).matches("^[0-9]*$")){
+					System.out.println("予期せぬエラーが発生しました");
 				}
 
 ////////※saleは売上金額※
@@ -139,14 +143,14 @@ public class CalculationSales {
 				String branchKey = summaryList.get(0);
 				Long branchSalesValue;
 				if(!branchSales.containsKey(branchKey)){
-					System.out.println(sales + "の支店コードが不正です");
+					System.out.println(sales.get(n) + "の支店コードが不正です");
 					return;
 				}
 				branchSalesValue = branchSales.get(branchKey);
 				Long branchSum = branchSalesValue + sale;
 
 
-				if(branchSum > 10000000000L){
+				if(branchSum >= 10000000000L){
 					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
@@ -155,13 +159,13 @@ public class CalculationSales {
 				String commodityKey = summaryList.get(1);
 				Long commodityValues;
 				if(!commoditySales.containsKey(commodityKey)){
-					System.out.println(sales + "の支店コードが不正です");
+					System.out.println(sales.get(n) + "の商品コードが不正です");
 					return;
 				}
 				commodityValues =commoditySales.get(commodityKey);
 				Long commoditySum = commodityValues + sale;
 
-				if(commoditySum > 10000000000L){
+				if(commoditySum >= 10000000000L){
 					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
