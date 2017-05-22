@@ -34,7 +34,7 @@ public class CalculationSales {
 ///////////商品定義ファイルの読み込み
 		Map<String, String> commodityNames = new HashMap<String, String>();
 		Map<String, Long> commoditySales = new HashMap<String, Long>();
-		if(!fileRead(args[0], "commodity.lst","商品定義ファイル", "^\\w{8}$", commodityNames, commoditySales)) {
+		if(!fileRead(args[0], "commodity.lst", "商品定義ファイル", "^\\w{8}$", commodityNames, commoditySales)) {
 			return;
 		}
 
@@ -70,7 +70,7 @@ public class CalculationSales {
 					summaryList.add(salesFile);
 				}
 				if(summaryList.size() != 3) {
-					System.out.println(sales.get(i) +"のフォーマットが不正です");
+					System.out.println(sales.get(i) + "のフォーマットが不正です");
 					return;
 				}
 				if(!summaryList.get(2).matches("^[0-9]*$")) {
@@ -115,7 +115,7 @@ public class CalculationSales {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		}finally {
-			if (br != null) {
+			if(br != null) {
 				try {
 					br.close();
 				}catch (IOException e) {
@@ -137,7 +137,7 @@ public class CalculationSales {
 	}
 
 //////////fileReadメソッド：ファイルから入力
-	private static boolean fileRead(String path, String fileName, String fileError, String match, Map<String, String> mapNames, Map<String, Long> mapSales){
+	private static boolean fileRead(String path, String fileName, String fileError, String match, Map<String, String> mapNames, Map<String, Long> mapSales) {
 
 		BufferedReader br = null;
 		try{
@@ -181,7 +181,7 @@ public class CalculationSales {
 		Collections.sort(entries, new Comparator<Map.Entry<String, Long>>() {
 			@Override
 			public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
-			return (o2.getValue()).compareTo(o1.getValue());
+			return(o2.getValue()).compareTo(o1.getValue());
 			}
 		});
 		BufferedWriter bw = null;
@@ -208,6 +208,4 @@ public class CalculationSales {
 		}
 		return true;
 	}
-
 }
-
